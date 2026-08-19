@@ -4,6 +4,8 @@ A from-scratch PyTorch implementation of YOLOv3 (Darknet53) for static images,
 offline videos, and real-time detection from your **Android phone camera via
 DroidCam** — all inside WSL2 with GPU (CUDA) support.
 
+![Object Detection Demo](ObjectDetection.gif)
+
 ## Features
 
 - YOLOv3 COCO pre-trained (80 classes), 3-scale detection (13x13 / 26x26 / 52x52).
