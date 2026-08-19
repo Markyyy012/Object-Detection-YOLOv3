@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YOLOv3 Object Detection — PyTorch</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#home">YOLOv3<span>.detect</span></a>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#upload">Upload</a>
+        <a href="#live">Live Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <p class="hero-badge">PyTorch · Darknet-53 · COCO (80 classes)</p>
+      <h1>Real-time <span>object detection</span> in your browser.</h1>
+      <p class="hero-sub">
+        A from-scratch YOLOv3 implementation for images, your webcam, and your
+        Android phone camera via DroidCam — all served by a FastAPI backend.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#upload">Try image detection</a>
+        <a class="btn btn-ghost" href="#live">Open live demo</a>
+      </div>
+      <div class="hero-status" id="health">Loading device info…</div>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <h2>Features</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Image detection</h3>
+        <p>Upload any image and get bounding boxes, class labels, and confidence scores instantly.</p>
+      </div>
+      <div class="card">
+        <h3>Live webcam</h3>
+        <p>Run detection on your own camera feed in real time, streamed over WebSockets.</p>
+      </div>
+      <div class="card">
+        <h3>DroidCam phone</h3>
+        <p>Point your Android/iOS phone camera at the scene and detect over WiFi.</p>
+      </div>
+      <div class="card">
+        <h3>80 COCO classes</h3>
+        <p>3-scale detection at 13×13 / 26×26 / 52×52 with CUDA auto-detection and CPU fallback.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="section">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>Upload / stream</strong> — send an image, webcam frames, or a DroidCam MJPEG stream.</li>
+      <li><strong>YOLOv3 inference</strong> — the Darknet-53 model decodes 3 scales and applies non-max suppression.</li>
+      <li><strong>Annotate</strong> — boxes, labels, and confidences are drawn and returned to your browser.</li>
+    </ol>
+  </section>
+
+  <section id="sample" class="section">
+    <h2>Sample result</h2>
+    <div class="sample-wrap">
+      <img src="/outputs/sample_detected.jpg" alt="Sample detection result" />
+    </div>
+  </section>
+
+  <section id="upload" class="section">
+    <h2>Image detection</h2>
+    <p class="muted">Drop an image or click to browse. Results appear below.</p>
+    <div class="upload-grid">
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="file-input" accept="image/*" hidden />
+        <div class="dz-icon">⬆</div>
+        <p>Drop image here<br /><span>or click to browse</span></p>
+      </div>
+      <div class="controls">
+        <label>Confidence threshold
+          <input type="range" id="conf" min="0.05" max="0.95" step="0.05" value="0.5" />
+          <span id="conf-val">0.50</span>
+        </label>
+      </div>
+    </div>
+    <div class="result hidden" id="result">
+      <div class="result-img">
+        <img id="result-image" alt="Detection result" />
+      </div>
+      <div class="result-meta">
+        <h3>Detected <span id="result-count">0</span> object(s)</h3>
+        <ul id="result-list"></ul>
+      </div>
+    </div>
+    <div class="status" id="upload-status"></div>
+  </section>
+
+  <section id="live" class="section">
+    <h2>Live demo</h2>
+    <p class="muted">Use your webcam, or stream from a DroidCam phone camera.</p>
+
+    <div class="live-tabs">
+      <button class="tab active" data-mode="webcam">Use my webcam</button>
+      <button class="tab" data-mode="droidcam">DroidCam phone</button>
+    </div>
+
+    <div class="live-panel" id="panel-webcam">
+      <p class="muted">Grant camera permission to start detecting with your browser camera (~10 fps).</p>
+      <button class="btn btn-primary" id="webcam-start">Start webcam</button>
+      <button class="btn btn-danger hidden" id="webcam-stop">Stop</button>
+    </div>
+
+    <div class="live-panel hidden" id="panel-droidcam">
+      <p class="muted">Open the DroidCam app on your phone, then enter the IP &amp; port shown (default 4747).</p>
+      <div class="droidcam-form">
+        <input type="text" id="dc-ip" placeholder="Phone IP (e.g. 192.168.1.50)" />
+        <input type="number" id="dc-port" placeholder="4747" value="4747" />
+        <button class="btn btn-primary" id="dc-start">Connect</button>
+        <button class="btn btn-danger hidden" id="dc-stop">Stop</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <label>Confidence threshold
+        <input type="range" id="live-conf" min="0.05" max="0.95" step="0.05" value="0.5" />
+        <span id="live-conf-val">0.50</span>
+      </label>
+    </div>
+
+    <div class="live-stage hidden" id="live-stage">
+      <img id="live-image" alt="Live detection" />
+      <div class="live-hud" id="live-hud">idle</div>
+    </div>
+    <div class="status" id="live-status"></div>
+  </section>
+
+  <footer class="footer">
+    <p>YOLOv3 Object Detection (PyTorch) — WSL + DroidCam</p>
+  </footer>
+
+  <video id="webcam-video" autoplay muted playsinline hidden></video>
+  <canvas id="webcam-canvas" hidden></canvas>
+
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/live.js"></script>
+</body>
+</html>

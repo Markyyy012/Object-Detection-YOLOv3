@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Pre-trained weights (237 MB — run `python download_weights.py` instead)
+weights/yolov3.weights
+
+# Generated outputs (keep the sample referenced by the web UI)
+outputs/*
+!outputs/sample_detected.jpg
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
